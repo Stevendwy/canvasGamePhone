@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+</head>
+<body>
+    <canvas id="canvas" width="600" height="400" style="border:1px solid #ddd;"></canvas>
+    <button id="add">Add Ball</button>
+    <button id="clear">Clear Canvas</button>
+    <input id="ballSize" type="number">
+    <input id="connectedBalls" type="checkbox">
+    Connect Balls
+    <script>
+        function Ball(x, y, dx, dy, radius) {
+            this.x = x
+            this.y = y
+            this.dx = dx
+            this.dy = dy
+            this.radius = radius
+            this.color = 'red'
+        }
+        var balls = []
+        function addBall() {
+            var radius = parseFloat(document.getElementById('ballSize').value)
+            var ball = new Ball(50, 50, 1, 1, radius)
+            balls.push(ball)
+        }
+        function clearBall() {
+            balls = []
+        }
+        document.getElementById('add').onclick = addBall
+        document.getElementById('clear').onclick = clearBall
+        var canvas = document.getElementById('canvas')
+        var context = canvas.getContext('2d')
+        setTimeout('drawFrame()', 20)
+        function drawFrame() {
+            context.clearRect(0, 0, canvas.width, canvas.height)
+            context.beginPath()
+            for (var i = 0; i < balls.length; i++) {
+                var ball = balls[i]
+                ball.x += ball.dx
+                ball.y += ball.dy
+                if (ball.y < canvas.height) ball.dy += 0.22
+                ball.dx = ball.dx * 0.998
+                if ((ball.x + ball.radius > canvas.width) || (ball.x - ball.radius < 0)) {
+                    ball.dx = -ball.dx
+                }
+                if ((ball.y + ball.radius > canvas.height) || (ball.y - ball.radius < 0)) {
+                    ball.dy = -ball.dy * 0.96
+                }
+                if (!document.getElementById('connectedBalls').checked) {
+                    context.beginPath()
+                    context.fillStyle = ball.color
+                } else {
+                    context.fillStyle = 'white'
+                }
+                context.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2)
+                context.lineWidth = 1
+                context.fill()
+                context.stroke()
+            }
+            setTimeout('drawFrame()', 20)
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>贝塞尔曲线</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			
+			}
+			#myCanvas{
+				border: 1px solid red;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="500" height="500"></canvas>
+	</body>
+	<script type="text/javascript">
+		var canvas = document.getElementById("myCanvas");
+		var context = canvas.getContext("2d");
+//		function Build (x1,y1,x2,y2,w,c) {
+//			this.x1 = x1;
+//			this.y1 = y1;
+//			this.x2 = x2;
+//			this.y2 = y2;
+//			this.w = w;
+//			this.c = c;
+//			this.creatL = function  () {
+//			context.beginPath();
+//			context.moveTo(this.x1,this.y1);
+//			context.lineTo(this.x2,this.y2);
+//			context.lineWidth = this.w;
+//			context.strokeStyle = this.c;
+//			context.stroke();
+//			}
+//			this.creatT = function  () {
+//			context.beginPath();
+//			context.moveTo(this.x1,this.y1);
+//			context.lineTo(this.x2,this.y2);
+//			context.closePath();
+//			context.strokeStyle = this.c;
+//			context.stroke();
+//			}
+//		}
+		//#ADFF2F
+		
+		
+		
+	/*	context.beginPath();
+		context.moveTo(10,400);
+		context.lineTo(400,10);
+		context.lineWidth = 10;
+		context.strokeStyle = "#ADFF2F";
+		context.stroke();
+		
+		context.beginPath();
+		context.moveTo(10,400);
+		context.lineTo(100,100);
+		context.closePath();
+		context.strokeStyle = "#808080";
+		context.stroke();
+				
+		context.beginPath();
+		context.moveTo(400,10);
+		context.lineTo(300,300);
+		context.closePath();
+		context.strokeStyle = "#808080";
+		context.stroke();
+		*/
+		
+		var rec1 = {
+			x:100,
+			y:100,
+			r:10,
+			color:"red"
+		}
+		var rec2 = {
+			x:300,
+			y:300,
+			r:10,
+			color:"blue"
+		}
+		var rec3 = {
+			x:400,
+			y:10,
+			r:10,
+			color:"black"
+		}
+		var rec4 = {
+			x:10,
+			y:400,
+			r:10,
+			color:"black"
+		}
+		abc();
+		var arr = [rec1,rec2,rec3,rec4];
+		function draw (obj) {
+			context.beginPath();
+			context.arc(obj.x,obj.y,obj.r,0,Math.PI*2,false);
+			context.fillStyle = obj.color;
+			context.fill();
+		}
+		for (var i=0;i<arr.length;i++) {
+			draw(arr[i]);
+		}
+
+	var n;
+	canvas.onmousedown = function(e){
+//	<!--获取鼠标坐标，注意大小写-->
+		var e = e||window.event;
+		var clicx = e.clientX - canvas.offsetLeft;
+		var clicy = e.clientY - canvas.offsetTop;
+		
+		for(var i=0;i<arr.length;i++){
+			draw(arr[i]);
+			if (context.isPointInPath(clicx,clicy)) {
+				n=i;
+			var disx = clicx - arr[n].x;
+			var disy = clicy - arr[n].y;
+			canvas.onmousemove = function(e){
+				context.clearRect(0,0,canvas.width,canvas.height);
+				
+				var e= e||window.event;
+				var x = e.clientX - canvas.offsetLeft - disx;
+				var y = e.clientY - canvas.offsetTop - disy;
+				arr[n].x = x;
+				arr[n].y = y;
+				
+			/*	context.beginPath();
+				context.moveTo(10,400);
+				context.lineTo(400,10);
+				context.lineWidth = 10;
+				context.strokeStyle = "cornflowerblue";
+				context.stroke();
+				
+				context.beginPath();
+				context.moveTo(10,400);
+				context.lineTo(rec1.x,rec1.y);
+				context.closePath();
+				context.strokeStyle = "#808080";
+				context.stroke();
+
+				context.beginPath();
+				context.moveTo(400,10);
+				context.lineTo(rec2.x,rec2.y);
+				context.closePath();
+				context.strokeStyle = "#808080";
+				context.stroke();
+			*/
+			abc();
+				for(var i=0;i<arr.length;i++){
+
+////			三次贝塞尔曲线
+					context.beginPath();
+////			设置绘制起点
+					context.moveTo(10,400);	
+					context.bezierCurveTo(rec1.x,rec1.y,rec2.x,rec2.y,400,10);
+////			连线
+					context.stroke();
+					draw(arr[i]);
+					
+					context.beginPath();
+//					context.moveTo(10,400);
+//					context.lineTo(400,10);
+//					context.lineWidth = 10;
+					context.strokeStyle = "#ADFF2F";
+					context.stroke();
+					}
+				
+				}
+			}
+		}
+	}
+		document.onmouseup = function(){
+			canvas.onmousemove = null;
+		}
+		
+		function abc(){
+			context.beginPath();
+				context.moveTo(10,400);
+				context.lineTo(400,10);
+				context.lineWidth = 10;
+				context.strokeStyle = "cornflowerblue";
+				context.stroke();
+				
+				context.beginPath();
+				context.moveTo(10,400);
+				context.lineTo(rec1.x,rec1.y);
+				context.closePath();
+				context.strokeStyle = "#808080";
+				context.stroke();
+
+				context.beginPath();
+				context.moveTo(400,10);
+				context.lineTo(rec2.x,rec2.y);
+				context.closePath();
+				context.strokeStyle = "#808080";
+				context.stroke();
+		}
+	</script>
+</html>

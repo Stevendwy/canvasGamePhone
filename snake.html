@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas 贪吃蛇</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#myCanvas{
+				border: 1px solid red;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="500" height="500"></canvas>
+	</body>
+		<script type="text/javascript">
+			var canvas = document.getElementById("myCanvas");
+			var context = canvas.getContext("2d");
+//			canvas.width = document.documentElement.clientWidth;
+//			canvas.height = document.documentElement.clientHeight;
+			var mapArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+			0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+			0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+			1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0,
+			0, 0, 0, 0, 1, 0, 0, 0, 0, 0];
+			//create snake
+			function Snake () {
+				this.x = 0;
+				this.y = 0;
+				this.w = 50;
+				this.h = 50;
+				this.colorHead = "blue";//the color of snake_head
+				this.colorbody = "purple";
+				//change the direction
+				this.left = false;
+				this.right = true;
+				this.top = false;
+				this.bottom = false;
+				this.isShift = true;
+				this.position = [];//use to store body 
+				this.drawHead = function  () {
+					context.fillStyle = this.colorHead;
+					context.fillRect(this.x,this.y,this.w,this.h);
+				}
+				this.drawBody = function  () {
+					this.position.push({x:this.x,y:this.y,w:this.w,h:this.h});
+					if (this.position.length>4 && this.isShift) {
+						this.position.shift();
+//						this.isShift = false;
+					}else{
+						this.isShift = true;
+					}
+					//ergodic 
+					for (var i=0;i<this.position.length;i++) {
+						var x = this.position[i].x;
+						var y = this.position[i].y;
+//						context.fillStyle = this.colorbody;
+//						context.fillRect(x,y,this.w,this.h);
+						context.beginPath();
+						context.rect(x,y,this.w,this.h);
+						context.strokeStyle = "red";
+						context.stroke();
+						context.fillStyle = this.colorbody;
+						context.fill();
+						
+					}
+				}
+				//function to move 
+				this.move = function  () {
+				if (this.left) {
+					this.x -= this.w; 
+				}else if (this.right) {
+					this.x += this.w;
+				}else if (this.top) {
+					this.y -= this.h;
+				}else if (this.bottom) {
+					this.y += this.h;
+					}
+				}
+			}
+//creat maps
+			function Maps (x,y,w,h) {
+				this.x = x;
+				this.y = y;
+				this.w = 50;
+				this.h = 50;
+				//img
+				var img = new Image();
+				img.src = "img/map.jpg";
+				this.draw = function  () {
+					context.drawImage(img,0,0,this.w,this.h,this.x,this.y,this.w,this.h);
+				}
+			}
+			var maps = [];
+			for (var i=0;i<10;i++) {
+				//make the longs of mapArr
+				for (var j=0;j<10;j++) {
+					if (mapArr[i*10+j]==1) {
+						var mapp = new Maps(j*50,i*50);
+						maps.push(mapp);
+					}
+				}
+			}
+			
+			
+			
+			
+			
+			
+//creat snake and food
+			function rand (m,n) {
+				return Math.floor(Math.random()*(n-m+1)+m);
+			}
+//judge crash
+			function crash(obj1,obj2){
+				var l1 = obj1.x;
+				var r1 = l1 + obj1.w;
+				var t1 = obj1.y;
+				var b1 = t1 + obj1.h;
+				
+				var l2 = obj2.x;
+				var r2 = l2 + obj2.w;
+				var t2 = obj2.y;
+				var b2 = t2 + obj2.h;
+				if(l1<r2 && r1>l2 && t1<b2 && b1>t2){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			
+			function Food () {
+				this.x = rand(0,9)*50;
+				this.y = rand(0,9)*50;
+				this.w = 50;
+				this.h = 50;
+				this.color = "#ADFF2F";
+				this.draw = function  () {
+					//judge
+					for (var i =0;i<snake.position.length;i++) {
+						if (this.x == snake.position[i].x && this.y == snake.position[i].y) {
+							this.x = rand(0,9)*50;
+							this.y = rand(0,9)*50;
+							this.draw();
+							return;//coincident stop
+						}
+					}
+					for (var i=0;i<maps.length;i++) {
+						if(this.x == maps[i].x && this.y == maps[i].y){
+							this.x = rand(0,9)*50;
+							this.y = rand(0,9)*50;
+							this.draw();
+							return;//coincident stop
+						}
+					} 
+					//creat food
+					context.fillStyle =this.color;
+					context.fillRect(this.x,this.y,this.w,this.h);
+				}
+			}
+			var snake = new Snake();	
+			var food = new Food();
+			function animate () {
+				context.clearRect(0,0,canvas.width,canvas.height);
+				snake.drawBody();
+				snake.drawHead();
+				snake.move();
+				food.draw();
+				for (var i=0;i<maps.length;i++) {
+					maps[i].draw();
+				}
+				
+				if (crash(snake,food)) {
+					snake.isShift = false;
+				}
+				if (snake.x>canvas.width-snake.w || snake.x<0 || snake.y>canvas.height-snake.h || snake.y<0) {
+					console.log("1");
+					clearInterval(time);
+				}
+				for (var i=0;i<maps.length;i++) {
+					if(crash(maps[i],snake)){
+						clearInterval(time);
+					}
+				}
+				for (var i=0;i<snake.position.length;i++) {
+					if (crash(snake,snake.position[i])) {
+						clearInterval(time);
+					}
+				}
+				
+			}
+			var time = setInterval(animate,300);
+			//keyboard to control
+			document.onkeydown = function  (e) {
+				var e = e||window.event;
+				switch (e.keyCode){
+					case 37:
+					if (!snake.right) {
+						snake.left = true;
+						snake.top = false;
+						snake.bottom = false;
+						snake.right = false;
+					}
+						break;
+					case 38:
+					if (!snake.bottom) {
+						snake.top = true;
+						snake.left = false;
+						snake.right = false;
+						snake.bottom = false;
+					}
+						break;
+					case 39:
+					if (!snake.left) {						
+						snake.left = false;
+						snake.right = true;
+						snake.top = false;
+						snake.bottom = false;
+					}
+						break;
+					case 40:	
+					if (!snake.top) {
+						snake.top = false;
+						snake.left = false;
+						snake.right = false;
+						snake.bottom = true;
+					}
+						break;
+					default:
+						break;
+				}
+			}
+		</script>
+</html>
