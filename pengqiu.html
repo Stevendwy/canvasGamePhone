@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>小球和钟表</title>
+		<style type="text/css">
+			#myCanvas{
+				border: 1px solid red;
+				margin: 0 50px;
+				/*padding: 50px;
+				border-radius: 50%;*/
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="500" height="500"></canvas>
+	</body>
+	<script type="text/javascript">
+		var canvas = document.getElementById("myCanvas");
+		var a = canvas.getContext("2d");//获取上下文
+		a.translate(250,250);
+		function clockPan() {
+		//绘制表盘，表盘的中心就是（0，0）；
+		a.beginPath();
+		a.arc(0,0,240,0,Math.PI*2,false);
+		a.closePath();
+		//设置边框样式和颜色
+		a.fillStyle ="#FFEBCD";
+		a.fill();
+		a.strokeStyle = "black";
+		a.lineWidth = 20;
+		a.stroke();
+		
+		//刻度值,先绘制小的刻度，当位置是大的刻度的时候用大的刻度覆盖
+		for (var i=0;i<60;i++) {
+			if (i%5==0) {
+				a.fillStyle = "red";
+				a.fillRect(-4,-230,8,28);
+				a.rotate(Math.PI*2/60);
+			}else{
+				a.fillStyle = "gray";
+				a.fillRect(-2,-230,4,10);
+				a.rotate(Math.PI*2/60);
+				}	
+			}
+		}
+			clockPan();
+			clock_hand();
+		//设置获取当前时间，并且进行绘制
+		setInterval(function(){
+			a.clearRect(0,0,canvas.width,canvas.height);
+			clockPan();
+			clock_hand();
+			console.log("1");
+		},100);
+		function clock_hand() {
+			//当前时间
+			var dater = new Date();
+			var hours = dater.getHours();
+			var minutes = dater.getMinutes();
+			var seconds = dater.getSeconds();
+			
+			a.save();
+			a.rotate(Math.PI*2/12*hours + (Math.PI*2/12/60*minutes));
+			//开始绘制表针
+			a.beginPath();
+			a.moveTo(0,-110);
+			a.lineTo(0,0);
+			a.strokeStyle = "black";
+			a.lineWidth = 20;
+			a.lineCap="round";
+			a.stroke();			
+			a.restore();
+			a.save();
+			
+			
+			a.rotate(Math.PI*2/60*minutes + (Math.PI*2/60/60*seconds));
+			a.beginPath();
+			a.moveTo(0,-150);
+			a.lineTo(0,0);
+			a.strokeStyle = "blue";
+			a.lineWidth = 10;
+			a.lineCap="round";
+			a.stroke();			
+			a.restore();
+			a.save();
+			
+			
+			a.rotate(Math.PI*2/60*seconds);
+			a.beginPath();
+			a.moveTo(0,-195);
+			a.lineTo(0,0);
+			a.strokeStyle = "red";
+			a.lineWidth = 5;
+			a.lineCap="round";
+			a.stroke();
+			a.restore();
+			a.save();		
+		}
+
+
+//1.碰撞的小球
+//		function rand (m,n) {
+////			return  num = Math.floor(Math.random()*(n-m+1)+m);
+//			return	parseInt(Math.random()*(n-m+1)+m);
+//		}
+//		//创建小球的类
+//		function Ball () {
+//			this.r = rand(2,20);//获取小球的半径
+//			this.x = rand(this.r,canvas.width-this.r);//随机获取球 x 的坐标
+//			this.y = rand(this.r,canvas.height-this.r);//随机获取的 y 的坐标
+//			this.color = "rgb("+rand(0,255)+","+rand(0,255)+","+rand(0,255)+")";
+//			
+//			var speedX = rand(1,6);//随机x轴上方向			
+//			this.speedX = rand(0,1)==0?speedX:-speedX;//用于判断正方向还是反方向
+//			var speedY = rand(1,6);
+//			this.speedY = rand(0,1)==0?speedY:-speedY;
+//		}
+//		//创建小球对象,实例化获得小球
+//		//创建数组，存储小球对象,方便遍历小球
+//		var arr = [];
+//		for (var i=0;i<200;i++) {
+//			var ball = new Ball();
+//			arr.push(ball);
+//		}
+//		//给小球添加公共的方法
+//		Ball.prototype.draw = function  () {
+//			a.beginPath();
+//			a.arc(this.x,this.y,this.r,0,Math.PI*2,false);
+//			a.closePath();
+//			a.fillStyle = this.color;//填充颜色
+//			a.fill();//填充
+//		}
+//		//添加运动的方法
+//		Ball.prototype.move = function  () {
+//			this.x += this.speedX;
+//			this.y += this.speedY;
+//			//控制运动范围
+//			if (this.x>canvas.width-this.r) {
+//				//实现碰壁反弹
+//				this.x=canvas.width-this.r;
+//				this.speedX *= -1;
+//			}
+//			if (this.x<this.r) {
+//				this.x = this.r;
+//				this.speedX *= -1;
+//			}
+//			if (this.y>canvas.height - this.r) {
+//				this.y = canvas.height - this.r;
+//				this.speedY *= -1;
+//			}
+//			if (this.y < this.r) {
+//				this.speedY *= -1;
+//			}
+//		}
+//		//遍历小球，开始运动
+//		
+//		setInterval(function  () {
+//			a.clearRect(0,0,canvas.width,canvas.height);
+//			for (var i=0;i<arr.length;i++) {
+//			arr[i].draw();
+//			arr[i].move();
+//		}
+////			console.log("1");
+//		},30);
+		
+		
+		
+	</script>
+</html>

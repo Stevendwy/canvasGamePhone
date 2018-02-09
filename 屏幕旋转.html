@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>屏幕旋转</title>
+		<style type="text/css">
+			p{
+				font-size: 50px;
+				color: red;
+			}
+			.div1{
+				width: 200px;
+				height: 200px;
+				background-color: yellow;
+			}
+			.active{
+				width: 500px;
+				height: 300px;
+				background-color: royalblue;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="div1">
+			
+		</div>
+		当前屏幕的状态:<p id="p1"></p>
+	</body>
+	<script type="text/javascript">
+	var div1 = document.getElementsByClassName('div1')[0];
+		var p = document.getElementById('p1');
+//		屏幕旋转事件
+//		添加屏幕旋转事件:
+//		触发时机:当手机发生旋转,而且,旋转角度为90度的
+//		倍数时,触发
+//手机方向发生改变时触发
+    window.onorientationchange = function  (e) {
+    	   var event = e || window.event;
+    	   //判断屏幕旋转方向
+//  	   window.orientation 当前设备(屏幕)的方向
+    	   switch (window.orientation){
+    	   	case 0:{
+    	   		//说明是竖屏
+    	   		p.innerHTML = '竖屏';
+    	   		div1.className = 'div1';
+    	   		break;
+    	   	}
+    	   	case 90:{
+    	   		//说明是左横屏
+    	   		p.innerHTML = '左横屏';
+    	   		div1.className = 'active';
+    	   		
+    	   		break;
+    	   	}
+    	   	case -90:{
+    	   		//说明是右横屏
+    	   		p.innerHTML = '右横屏';
+    	   		div1.className = 'active';
+    	   		
+    	   		break;
+    	   	}
+    	   	case 180:{
+    	   		//说明是倒立
+    	   		p.innerHTML = '倒屏';
+    	   		div1.className= 'div1';
+    	   		
+    	   		break;
+    	   	}
+    	   	default:
+    	   		break;
+    	   }
+    }
+	</script>
+	
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>物理状态效果</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#mycanvas{
+				border: 2px solid darkblue;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="mycanvas" width="500" height="500"></canvas>
+	</body>
+	<script type="text/javascript">
+		var canvas = document.getElementById("mycanvas");
+		var context = canvas.getContext("2d");
+		
+		var ball = {
+			x:200,
+			y:20,
+			r:20,
+			k:0,
+			speedy : 0,
+			draw:function  () {
+				context.beginPath();
+				context.arc(this.x,this.y,this.r,0,Math.PI*2,false);
+				context.fillStyle = "blue";
+				context.fill();
+			}
+		}
+		ball.draw();
+		//添加点击事件
+		canvas.onclick = function  () {
+			var time = setInterval(function  () {
+				ball.k++;
+				ball.speedy +=2;
+				context.clearRect(0,0,canvas.width,canvas.height);
+				ball.y += ball.speedy;
+				if (ball.y >= canvas.height-ball.r) {
+					ball.y = canvas.height- ball.r;
+					ball.speedy*=-0.99;	
+				}
+				if (Math.abs(ball.speedy)<1&&ball.y>=canvas.height-ball.r) {
+					ball.speedy = 0;
+					clearInterval(time);
+				}
+				console.log(ball.speedy);
+				console.log(ball.k);
+				ball.draw();
+			},30);
+		}
+		
+		//图形轮播
+//		var img = new Image();
+//		img.src = "img/background.png";
+//		bgimg = {
+//			x:0,
+//			y:0,
+//			w:canvas.width,
+//			h:canvas.height,
+//			draw:function  () {
+//				this.y++;
+//				if (this.y>=canvas.height) {
+//					this.y =0;
+//				} 
+//				context.drawImage(img,this.x,this.y,this.w,this.h);
+//				context.drawImage(img,this.x,this.y-canvas.height,this.w,this.h);
+//			}	
+//		}
+//		setInterval(function  () {
+//			context.clearRect(0,0,canvas.width,canvas.height);
+//			bgimg.draw();
+//		},3)
+		//绘制规则图形
+//		var n =0;//定义一个变量来实现角度的变化
+//		function move () {
+//			n++;
+//			//将n值转化为弧度制
+//			var ang = n/180*Math.PI; 
+////			context.clearRect(0,0,canvas.width,canvas.height);
+//			var x = circle(250,250,200,ang)[0];
+//			var y = circle(250,250,200,ang)[1];
+//			context.beginPath();
+//			context.arc(x,y,10,0,Math.PI*2,false);
+//			context.fillStyle = "red";
+//			context.fill();
+//			if (n<=0) {
+//				clearInterval(times);
+//			}
+//		}
+//		var times = setInterval(move,1);
+//		//计算圆心轨迹
+//		function circle (x,y,r,angle) {
+//			var arcx = x + r*Math.cos(angle);
+//			var arcy = y + r*Math.sin(angle);
+//			return [arcx,arcy];
+//		}
+//		context.beginPath();
+//		context.rect(100,100,300,200);
+//		context.fillStyle = "red";
+//		context.fill();
+//		canvas.onclick = function (e){
+//			var ev = e||window.event;
+//			var x = ev.clientX - canvas.offsetLeft;
+//			var y = ev.clientY - canvas.offsetTop;
+//			if (context.isPointInPath(x,y)) {
+//				console.log("神龙");
+//			}
+//		}
+		
+	</script>
+</html>

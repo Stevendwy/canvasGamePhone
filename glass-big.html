@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas仿写放大镜</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#picture{
+				width: 680px;
+				position: relative;
+			}
+			#mycanvas{
+				border: 1px solid red;
+				position: absolute;
+				top: 0;
+				left: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<img  id="picture" src="img/1.jpg"/>
+		<canvas id="mycanvas" width="680" height="1020"></canvas>
+	</body>
+	<script type="text/javascript">
+		var canvas = document.getElementById("mycanvas");
+		var context = canvas.getContext("2d");
+		var img = document.getElementById("picture");
+		canvas.onmouseenter = function  () {
+			canvas.onmousemove = function  (e) {
+			console.log("1");
+//			context.restore();
+			var ev = e||window.event;
+			var x = ev.clientX-canvas.offsetLeft;
+			var y = ev.clientY-canvas.offsetTop;	
+			context.clearRect(0,0,canvas.width,canvas.height);
+			if (x>580&&x<=680) {
+				x=580;
+			}
+			if (y>920&&y<=1020) {
+				y=920;
+			}
+			
+			context.drawImage(img,x,y,100,100,x-100,y-100,200,200);
+			console.log(x+'aaaaaaa'+y+'bbbbbbbb');
+			}			
+		}
+		canvas.onmouseleave = function  () {
+			context.clearRect(0,0,canvas.width,canvas.height);
+		}
+	</script>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			ul{
+				list-style-type: none;
+			}
+		</style>
+	</head>
+	<body>
+		<input type="button" value="全选" id="allChoose" />
+		<input type="button" value="反选" id="noChoose" />
+		<input type="checkbox" id="ch1" />
+		<!--ul[id="ul1"]>(li>input[type="checkbox"])*10-->
+		<ul id="ul1">
+			<li><input type="checkbox" />视频</li>
+			<li><input type="checkbox" />图片</li>
+			<li><input type="checkbox" />娱乐</li>
+			<li><input type="checkbox" />体育</li>
+			<li><input type="checkbox" />书籍</li>
+			<li><input type="checkbox" />财经</li>
+			<li><input type="checkbox" />电影</li>
+			<li><input type="checkbox" />电视剧</li>
+			<li><input type="checkbox" />大保健</li>
+			<li><input type="checkbox" />新闻</li>
+		</ul>
+	</body>
+	<script type="text/javascript">
+	//全选按钮
+		var allChoose = document.getElementById("allChoose");
+		//全选框
+		var ch1 = document.getElementById("ch1");
+		//获取所有的类别checkbox选框
+//		var inputs = document.querySelectorAll("#ul1 input");
+//获取所有的checkbox选框  第二种方式
+  var ul1 = document.getElementById("ul1");
+  var inputs = ul1.getElementsByTagName("input");
+//全选按钮的点击事件
+allChoose.onclick = function  () {
+	for (var i = 0;i < inputs.length;i++) {
+		//设置选中状态
+		inputs[i].checked = true;
+	}
+	ch1.checked = true;
+}
+var noChoose = document.getElementById("noChoose");
+//反选按钮的点击事件
+noChoose.onclick = function  () {
+	var bool = true;//假设true是全选中的状态
+	for (var i = 0;i < inputs.length;i++) {
+	   inputs[i].checked =  !inputs[i].checked;
+	   //验证我的假设
+		if (inputs[i].checked == false) {
+			bool = false;
+		}
+	}
+	if (bool) {
+		ch1.checked = true;
+	} else{
+		ch1.checked = false;
+	}		
+}
+//点击选框
+for (var i = 0;i < inputs.length;i++) {
+	inputs[i].onclick = function  () {
+		var num = 0;//用来记录选中按钮的个数
+		for (var j = 0;j < inputs.length;j++) {
+			//如果为选中状态
+			if (inputs[j].checked) {
+				num++;
+			}
+		}
+		//全选中的状态
+		if (num == inputs.length) {
+			ch1.checked = true;
+		} else{
+			ch1.checked = false;
+		}
+	}
+}
+		
+		
+		
+		
+		
+		
+	</script>
+</html>

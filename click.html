@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>时钟</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+			}
+			#wrap{
+				width: 240px;
+				height: 240px;
+				border-radius: 120px;
+				background-color: cornsilk;
+				border: 5px double #0000FF;
+				border: #0000FF;
+				/*margin: 50px auto;*/
+				margin: 0 auto;
+				margin-top: 50px;
+				/*position: relative;*/
+				position: relative;
+			}
+			#clock{
+				width: 200px;
+				height: 200px;
+				background-color: white;
+				border-radius: 50%;
+				/*position: absolute;*/
+				position: absolute;
+				top: 20px;
+				left: 20px;
+			}
+			#bNumber{
+				/*position: relative;*/
+				position: relative;
+				width: 100%;
+				height: 100%;
+			}
+			#bNumber div{
+				width: 190px;
+				height: 20px;
+				/*border: 1px dashed;*/
+				/*position: absolute;*/
+				position: absolute;
+				left: 5px;
+				top: 90px;
+				line-height: 20px;
+			}
+			#bNumber span{
+				height: 20px;
+				width: 20px;
+				display: block;
+			}
+			#hour{
+				width: 5px;
+				height: 50px;
+				background-color: #000000;				
+			}
+			#minute{
+				width: 3px;
+				height: 70px;
+				background-color: #FFE4C4;
+			}
+			#second{
+				width: 1px;
+				height: 90px;
+				background-color: red;
+			}
+			.number{
+				/*position:absolute ;*/
+				position: absolute;
+				left: 100px;
+				bottom: 100px;
+				/*旋转参考的中心点位置*/
+				transform-origin: 50% bottom;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="clock">
+				<!--//时间表-->
+				<div id="bNumber">
+					<div><span>9</span></div>
+					<div><span>10</span></div>
+					<div><span>11</span></div>
+					<div><span>12</span></div>
+					<div><span>1</span></div>
+					<div><span>2</span></div>
+					<div><span>3</span></div>
+					<div><span>4</span></div>
+					<div><span>5</span></div>
+					<div><span>6</span></div>
+					<div><span>7</span></div>
+					<div><span>8</span></div>					
+				</div>
+				<!--//指针-->
+				<div id="hour" class="number"></div>
+				<div id="minute" class="number"></div>
+				<div id="second" class="number"></div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var hour = document.getElementById("hour");
+		var minute = document.getElementById("minute");
+		var second = document.getElementById("second");
+		var bNumber = document.getElementById("bNumber");
+		var divs =bNumber.getElementsByTagName("div");
+		var spans = bNumber.getElementsByTagName("span");
+		
+		//通过旋转，重置钟点位置
+		for (var i = 0;i<divs.length;i++) {
+			divs[i].style.transform = 'rotate('+i*30+'deg)';
+			
+		}
+		for (var i =0;i<spans.length;i++) {
+			spans[i].style.transform = 'rotate('+i*-30+'deg)';
+		}
+		function clockNumber(){
+			var newTime = new Date();
+			var nowHour = newTime.getHours();
+			var nowMinute = newTime.getMinutes();
+			
+			var nowSeconds = newTime.getSeconds();
+			var secondDeg = nowMinute/60*30;
+//			var secondDegs = secondDeg/180*;
+//			console.log('rotate('+(nowHour*30+secondDeg)+'deg)');
+			hour.style.transform = 'rotate('+(nowHour*30+secondDeg)+'deg)';
+			var secondDeg2 = nowSeconds/60*6;
+			minute.style.transform = 'rotate('+(nowMinute*6+secondDeg2)+'deg)';
+			second.style.transform = 'rotate('+nowSeconds*6+'deg)';
+			
+		}
+		clockNumber();
+		setInterval('clockNumber()',1000);
+		
+
+	</script>
+</html>
