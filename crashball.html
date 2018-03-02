@@ -1,0 +1,127 @@
+<html>
+<head>
+<title>JavaScript 跳跳球效果模拟</title>
+<style type="text/css">
+body {
+    cursor:crosshair;
+    margin:0;
+    padding:0; 
+    position:absolute; 
+    overflow:hidden; 
+    background:#000; 
+    left:0; 
+    top:0; 
+    width:100%; 
+    height:100%;
+}
+img {
+    position:absolute;
+    left:-1000;
+}
+</style>
+<script type="text/javascript">
+// <!--
+o   = new Object();
+xm  = ym = 0;
+K   = 0;
+M   = 1;
+img = 0;
+
+document.onmousemove = function(e){
+	if (window.event) e = window.event;
+	xm = (e.x || e.clientX);
+	ym = (e.y || e.clientY);
+	M  = 0;
+}
+function resize() {
+	nx = document.body.offsetWidth;
+	ny = document.body.offsetHeight;
+}
+onresize = resize;
+obZ = function(N,img,imgS) {
+	this.N  = N;
+	this.W  = (N==0)?0:img.width/2;
+	this.x  = xm/2;
+	this.y  = -this.W;
+	this.vx = 6;
+	this.vy = 0;
+	this.O = document.createElement("img");
+	this.O.src = img.src;
+	this.O.style.zIndex = 1000-this.W;
+	document.getElementById("SF").appendChild(this.O);
+}
+
+function mainloop(){
+	for(i=M;i<K;i++){
+		with(o[i]){
+			for(j=i+1;j<K;j++){
+        		dx = x-o[j].x;
+        		dy = y-o[j].y;
+        		d1 = Math.sqrt(dx*dx+dy*dy);
+				d  = (W+o[j].W)-d1;
+        		if(d>0){
+					ang = Math.atan2(dy, dx);
+					dx = d * Math.cos(ang);
+					dy = d * Math.sin(ang);
+					if(W>o[j].W || i==0){
+						o[j].x  -= dx;
+        				o[j].y  -= dy;
+						o[j].vx -= dx;
+       					o[j].vy -= dy;
+					} else {
+						x  += dx;
+						y  += dy;
+						vx += dx;
+						vy += dy;
+					}
+				}
+			}
+			vy+=W/100;
+			y+=vy;
+			if(y>ny-W)vy=-vy,y=ny-W;
+			x+=vx;
+			if(x<W)x=W,vx=-vx;
+			else if(x>nx-W)x=nx-W,vx=-vx;
+			vx*=.99;
+			vy*=.99;
+			if(N==0)x=xm,y=ym,vx=0,vy=0;
+			else{
+				O.style.left = x-W;
+				O.style.top  = y-W;
+			}
+		}
+	}
+	M = 1;
+	setTimeout(mainloop,16);
+}
+function creaTobZ(ID){
+	o[K] = new obZ(K++,img[ID]);
+}
+
+onload = function() {
+	img = document.getElementById("images").getElementsByTagName("img");
+	resize();
+	xm = nx / 2;
+	ym = -1000;
+	creaTobZ(0);
+	setTimeout("creaTobZ(0)",500);
+	for(var i=0;i<20;i++)setTimeout("creaTobZ("+(1+(i%(img.length-1)))+")",(i+10)*500);
+	mainloop();
+}
+//-->
+</script>
+</head>
+<body>
+<div id="SF" style="left:0px;position:absolute;top:0px"></div>
+<div id="images" style="visibility:hidden;">
+<IMG src="./img/ballimg/c1.gif">
+<IMG src="./img/ballimg/c2.gif">
+<IMG src="./img/ballimg/c3.gif">
+<IMG src="./img/ballimg/c3.gif">
+<IMG src="./img/ballimg/c4.gif">
+<IMG src="./img/ballimg/c4.gif">
+<IMG src="./img/ballimg/c4.gif">
+<IMG src="./img/ballimg/c4.gif">
+</div>
+</body>
+</html>
