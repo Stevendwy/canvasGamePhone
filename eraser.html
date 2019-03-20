@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Eraser</title>
+    <meta name="viewport" content="width=640,user-scalable=no,minimum-scale=1.0,maximum-scale=1.0" />
+<body>
+<style>
+    *{
+        margin:0px;
+        padding:0px;
+
+    }
+    html,body{
+        width:100%;
+        height:100%;
+        margin:0px auto;
+        position: relative;
+    }
+    .Eraser{
+        position:absolute;
+       
+        width:500px;
+        height:332px;
+
+    }
+</style>
+<div class="Eraser" id="Eraser">
+
+    <img src="img/souce_cover.jpg" style="position:absolute;width:500px; height:332px; left:0px; top:0px;" />
+
+    <canvas texsrc="img/souce_cover.jpg" imgsrc='img/target_cover.jpg' width="500" height="332" style='position:absolute;width:500px;height:332px; left:0px; top:0px;background: transparent;' id="CanvasDoodle"></canvas>
+
+</div>	
+<script>
+//img/souce_cover.jpg   被擦除的图像
+//img/target_cover.jpg   目标图像  
+function CanvasDoodle(canvas) {
+
+    this.canvas = canvas;
+
+    this.ctx = canvas.getContext('2d');
+
+    this.imgSrc = canvas.getAttribute("imgsrc");
+
+    this.width = canvas.width;
+
+    this.height = canvas.height;
+
+    this.left = parseInt(canvas.style.left);
+
+    this.top = parseInt(canvas.style.top);
+
+    this.touchX = 0;
+
+    this.touchY = 0;
+
+    this.requireLoop = false;
+
+    this.init();
+
+}
+
+CanvasDoodle.prototype = {
+
+    init: function() {
+        var touch_event = this.test_ua();
+
+        document.body.setAttribute("needRefresh", "true");
+
+        var _self = this;
+
+        this.img = new Image();
+
+        this.img.src = this.imgSrc;
+
+        console.log(touch_event['touchstart']);
+
+        this.canvas.addEventListener(touch_event['touchstart'],
+        function(e) {
+            var UA = window.navigator.userAgent;
+            if (! (/ipad|iphone|android|mobile/i.test(UA))) {
+                var touchs = e;
+                var posX = touchs.clientX;
+                var posY = touchs.clientY;
+            } else {
+                var touchs = e.changedTouches[0];
+                var posX = touchs.pageX;
+                var posY = touchs.pageY;
+            }
+
+            e.preventDefault();
+
+            _self.requireLoop = true;
+            console.log( _self.left)
+            _self.touchX = posX - _self.left,
+            _self.touchY = posY - _self.top;
+
+            _self.loop();
+
+        },
+        false);
+
+        this.canvas.addEventListener(touch_event['touchmove'],
+        function(e) {
+            var UA = window.navigator.userAgent;
+            if (! (/ipad|iphone|android|mobile/i.test(UA))) {
+                var touchs = e;
+                var posX = touchs.clientX;
+                var posY = touchs.clientY;
+            } else {
+                var touchs = e.changedTouches[0];
+                var posX = touchs.pageX;
+                var posY = touchs.pageY;
+            }
+            e.preventDefault();
+
+            if (_self.requireLoop) {
+
+                _self.touchX = posX - _self.left,
+                _self.touchY = posY - _self.top;
+
+            }
+
+        },
+        false);
+
+        this.canvas.addEventListener(touch_event['touchend'],
+        function(e) {
+
+            e.preventDefault();
+
+            _self.requireLoop = false;
+
+        });
+
+    },
+    test_ua: function() {
+        var touch_event = {
+            touchstart: 'touchstart',
+            touchmove: 'touchmove',
+            touchend: 'touchend',
+
+        }
+
+        var UA = window.navigator.userAgent;
+        if (! (/ipad|iphone|android|mobile/i.test(UA))) {
+            touch_event['touchstart'] = 'mousedown';
+            touch_event['touchmove'] = 'mousemove';
+            touch_event['touchend'] = 'mouseup';
+        }
+
+        return touch_event
+    },
+    loop: function() {
+
+        if (this.requireLoop) {
+
+            var _self = this;
+            var requestAnimationFrame = window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.requestAnimationFrame;
+            requestAnimationFrame(function() {
+                _self.loop()
+            });
+
+            this.render();
+
+        }
+
+    },
+
+    render: function() {
+
+        var _self = this;
+
+        _self.ctx.save();
+
+        _self.ctx.beginPath();
+
+        _self.ctx.arc(_self.touchX, _self.touchY, 20, 0, Math.PI * 2, true);
+
+        _self.ctx.clip();
+
+        _self.ctx.drawImage(_self.img, 0, 0, _self.width, _self.height, 0, 0, _self.width, _self.height);
+
+        _self.ctx.restore();
+
+    }
+
+};
+
+new CanvasDoodle(document.getElementById('CanvasDoodle'));
+
+
+   
+
+</script> 
+  
+   <strong style="position:absolute;left:0px;top:400px;"><h1>用鼠标和手指擦除上述图片，显示清晰的图片。</h1></strong>
+</body>
+</html>
